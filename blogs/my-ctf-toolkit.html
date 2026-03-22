@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Snuffkey // My CTF Toolkit</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="nav-logo"><span>//</span> SNUFFKEY</a>
+  <ul>
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="../projects/index.html">Projects</a></li>
+    <li><a href="index.html" class="active">Blogs</a></li>
+    <li><a href="../writeups/index.html">Writeups</a></li>
+    <li><a href="../resume.html">Resume</a></li>
+  </ul>
+</nav>
+
+<div class="page-wrap">
+  <a href="index.html" class="back-link">← BACK TO BLOGS</a>
+
+  <div class="post-header">
+    <div class="post-meta">TOOLS // CTF &nbsp;·&nbsp; FEB 2025 &nbsp;·&nbsp; 7 MIN READ</div>
+    <h1 class="post-title">MY CTF TOOLKIT</h1>
+    <div class="divider" style="width:200px; margin-top:16px;"></div>
+  </div>
+
+  <div class="post-body">
+    <p>
+      After dozens of CTFs I've settled on a core set of tools I reach for every time. This isn't an exhaustive list — it's the stuff that actually lives in my workflow.
+    </p>
+
+    <h2>// RECON</h2>
+    <p>
+      <code>nmap</code> is non-negotiable. I always start with a fast scan then follow up with service detection:
+    </p>
+    <pre>$ nmap -p- --min-rate 5000 target
+$ nmap -sV -sC -p 22,80,443 target</pre>
+    <p>
+      For web recon I use <code>gobuster</code> for directory busting and <code>ffuf</code> for fuzzing subdomains and parameters.
+    </p>
+
+    <h2>// WEB EXPLOITATION</h2>
+    <p>
+      Burp Suite Community is my proxy of choice. Combined with <code>sqlmap</code> for automated injection testing and manual inspection for logic flaws, it covers most web challenge categories.
+    </p>
+
+    <h2>// REVERSE ENGINEERING & BINARY</h2>
+    <p>
+      <code>ghidra</code> for decompilation, <code>gdb</code> with pwndbg for dynamic analysis, and <code>pwntools</code> for writing exploits in Python. For simpler RE challenges, <code>strings</code> and <code>file</code> commands catch more than you'd expect.
+    </p>
+
+    <h2>// CRYPTO</h2>
+    <p>
+      Most crypto challenges come down to recognizing the cipher or vulnerability type. I keep a notes file of common patterns — RSA small exponent, padding oracle, XOR key recovery. <code>CyberChef</code> handles the rest.
+    </p>
+
+    <h2>// MY SETUP</h2>
+    <p>
+      Kali Linux as my primary CTF VM. I keep a clean snapshot before each competition so I can restore quickly. All tools installed, aliases set, and a <code>~/ctf/</code> folder structure ready to go.
+    </p>
+    <pre>~/ctf/
+├── current/     ← active competition
+├── archive/     ← past CTFs
+└── tools/       ← custom scripts</pre>
+  </div>
+</div>
+
+<footer>
+  <span>© 2025 KEENAN // SNUFFKEY</span>
+  <span>BUILT WITH HTML · CSS · JS</span>
+  <span>ALL SYSTEMS NOMINAL</span>
+</footer>
+
+<script src="../js/matrix.js"></script>
+</body>
+</html>

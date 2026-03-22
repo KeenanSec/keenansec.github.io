@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Snuffkey // NetScanner</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="nav-logo"><span>//</span> SNUFFKEY</a>
+  <ul>
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="index.html" class="active">Projects</a></li>
+    <li><a href="../blogs/index.html">Blogs</a></li>
+    <li><a href="../writeups/index.html">Writeups</a></li>
+    <li><a href="../resume.html">Resume</a></li>
+  </ul>
+</nav>
+
+<div class="page-wrap">
+  <a href="index.html" class="back-link">← BACK TO PROJECTS</a>
+
+  <div class="post-header">
+    <div class="post-meta">TOOL // PYTHON &nbsp;·&nbsp; 2024</div>
+    <h1 class="post-title">NETSCANNER</h1>
+    <div class="divider" style="width:200px; margin-top:16px;"></div>
+  </div>
+
+  <div style="display:flex; gap:12px; margin-bottom:32px; flex-wrap:wrap;">
+    <a href="https://github.com/YOUR_USERNAME/netscanner" class="btn-primary" target="_blank">VIEW ON GITHUB →</a>
+    <span class="skill-tag">PYTHON</span>
+    <span class="skill-tag">NETWORKING</span>
+    <span class="skill-tag">RECON</span>
+  </div>
+
+  <div class="post-body">
+    <p>
+      NetScanner is a lightweight Python-based network reconnaissance tool I built to speed up the initial enumeration phase in CTF environments. It wraps common scanning techniques into a single clean CLI interface.
+    </p>
+
+    <h2>// FEATURES</h2>
+    <p>
+      Fast TCP port scanning with configurable thread count, service version detection, basic banner grabbing, and structured JSON output for piping into other tools.
+    </p>
+
+    <h2>// USAGE</h2>
+    <pre>$ python3 netscanner.py -t 192.168.1.1 -p 1-1000 --threads 100
+[*] Starting scan on 192.168.1.1
+[+] 22/tcp   OPEN  OpenSSH 8.2
+[+] 80/tcp   OPEN  Apache httpd 2.4.41
+[+] 443/tcp  OPEN  Apache httpd 2.4.41
+[*] Scan complete. 3 open ports found.</pre>
+
+    <h2>// WHY I BUILT IT</h2>
+    <p>
+      I wanted to understand exactly what was happening under the hood of tools like nmap. Building this from scratch using Python's <code>socket</code> library taught me more about TCP handshakes and service detection than reading any documentation.
+    </p>
+
+    <h2>// INSTALLATION</h2>
+    <pre>$ git clone https://github.com/YOUR_USERNAME/netscanner
+$ cd netscanner
+$ pip install -r requirements.txt
+$ python3 netscanner.py --help</pre>
+  </div>
+</div>
+
+<footer>
+  <span>© 2025 KEENAN // SNUFFKEY</span>
+  <span>BUILT WITH HTML · CSS · JS</span>
+  <span>ALL SYSTEMS NOMINAL</span>
+</footer>
+
+<script src="../js/matrix.js"></script>
+</body>
+</html>

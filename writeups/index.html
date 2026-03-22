@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Snuffkey // Writeups</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .difficulty { font-size: 0.65rem; letter-spacing: 2px; padding: 2px 8px; border: 1px solid; }
+    .diff-easy   { color: #00ff41; border-color: rgba(0,255,65,0.4); }
+    .diff-medium { color: #ffd700; border-color: rgba(255,215,0,0.4); }
+    .diff-hard   { color: #ff6b35; border-color: rgba(255,107,53,0.4); }
+    .diff-insane { color: #ff003c; border-color: rgba(255,0,60,0.4); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="nav-logo"><span>//</span> SNUFFKEY</a>
+  <ul>
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="../projects/index.html">Projects</a></li>
+    <li><a href="../blogs/index.html">Blogs</a></li>
+    <li><a href="index.html" class="active">Writeups</a></li>
+    <li><a href="../resume.html">Resume</a></li>
+  </ul>
+</nav>
+
+<div class="page-wrap">
+  <div class="terminal-line"><span class="prompt">$</span> ls -la writeups/</div>
+
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <h1 class="section-title">// WRITEUPS</h1>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="card-grid">
+
+    <!-- ─ ADD NEW WRITEUPS HERE ─
+         Copy one <a class="card"> block, update the fields.
+         Difficulty classes: diff-easy / diff-medium / diff-hard / diff-insane
+    ─────────────────────────────── -->
+
+    <a href="htb-keeper.html" class="card">
+      <div class="card-tag" style="display:flex; justify-content:space-between; align-items:center;">
+        HTB // LINUX <span class="difficulty diff-easy">EASY</span>
+      </div>
+      <div class="card-title">KEEPER</div>
+      <p class="card-desc">Exploiting a default credential vulnerability in a ticket management system to gain initial foothold, then cracking a KeePass database for root.</p>
+      <div class="card-footer">
+        <span>AUG 2024</span>
+        <span class="card-link">READ →</span>
+      </div>
+    </a>
+
+    <a href="htb-analytics.html" class="card">
+      <div class="card-tag" style="display:flex; justify-content:space-between; align-items:center;">
+        HTB // LINUX <span class="difficulty diff-easy">EASY</span>
+      </div>
+      <div class="card-title">ANALYTICS</div>
+      <p class="card-desc">Pre-auth RCE in Metabase via CVE-2023-38646, followed by environment variable credential extraction and kernel exploit for privilege escalation.</p>
+      <div class="card-footer">
+        <span>SEP 2024</span>
+        <span class="card-link">READ →</span>
+      </div>
+    </a>
+
+    <a href="htb-usage.html" class="card">
+      <div class="card-tag" style="display:flex; justify-content:space-between; align-items:center;">
+        HTB // LINUX <span class="difficulty diff-medium">MEDIUM</span>
+      </div>
+      <div class="card-title">USAGE</div>
+      <p class="card-desc">SQL injection in a password reset form leads to credential extraction. Admin panel file upload bypass for RCE, then wildcard injection for root.</p>
+      <div class="card-footer">
+        <span>OCT 2024</span>
+        <span class="card-link">READ →</span>
+      </div>
+    </a>
+
+  </div>
+</div>
+
+<footer>
+  <span>© 2025 KEENAN // SNUFFKEY</span>
+  <span>BUILT WITH HTML · CSS · JS</span>
+  <span>ALL SYSTEMS NOMINAL</span>
+</footer>
+
+<script src="../js/matrix.js"></script>
+</body>
+</html>

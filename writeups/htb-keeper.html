@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Snuffkey // HTB: Keeper</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .difficulty { font-size: 0.65rem; letter-spacing: 2px; padding: 2px 8px; border: 1px solid; }
+    .diff-easy { color: #00ff41; border-color: rgba(0,255,65,0.4); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="nav-logo"><span>//</span> SNUFFKEY</a>
+  <ul>
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="../projects/index.html">Projects</a></li>
+    <li><a href="../blogs/index.html">Blogs</a></li>
+    <li><a href="index.html" class="active">Writeups</a></li>
+    <li><a href="../resume.html">Resume</a></li>
+  </ul>
+</nav>
+
+<div class="page-wrap">
+  <a href="index.html" class="back-link">← BACK TO WRITEUPS</a>
+
+  <div class="post-header">
+    <div class="post-meta" style="display:flex; align-items:center; gap:12px;">
+      HTB // LINUX &nbsp;·&nbsp; AUG 2024 &nbsp;
+      <span class="difficulty diff-easy">EASY</span>
+    </div>
+    <h1 class="post-title">HTB: KEEPER</h1>
+    <div class="divider" style="width:200px; margin-top:16px;"></div>
+  </div>
+
+  <div class="post-body">
+    <p>
+      Keeper is a Linux machine on HackTheBox rated Easy. The attack chain involves default credentials on a ticket management portal, credential reuse for SSH access, and cracking a KeePass database to retrieve the root SSH key.
+    </p>
+
+    <h2>// RECON</h2>
+    <pre>$ nmap -sV -sC -p 22,80 10.10.11.227
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 8.9p1
+80/tcp open  http    nginx 1.18.0</pre>
+    <p>
+      Port 80 redirects to <code>tickets.keeper.htb</code>. Added both to <code>/etc/hosts</code> and navigated to the ticket system — it's running <strong>Request Tracker (RT)</strong>.
+    </p>
+
+    <h2>// INITIAL FOOTHOLD</h2>
+    <p>
+      RT has well-known default credentials: <code>root:password</code>. They worked. Inside the admin panel, user accounts are visible — one user has their initial password stored in the comments field of their profile.
+    </p>
+    <pre>$ ssh lnorgaard@10.10.11.227
+# password from RT user profile
+lnorgaard@keeper:~$ cat user.txt</pre>
+
+    <h2>// PRIVILEGE ESCALATION</h2>
+    <p>
+      The home directory contains a zip file with a KeePass <code>.kdbx</code> database and a memory dump. CVE-2023-32784 allows recovering the master password from a KeePass memory dump.
+    </p>
+    <pre>$ python3 keepass-dump-masterkey.py -d KeePassDumpFull.dmp
+Possible password: ●ødgrød med fløde</pre>
+    <p>
+      The password (a Danish dessert name) opens the database. Inside is the root SSH private key stored as a PuTTY <code>.ppk</code> file. Converting with <code>puttygen</code> and SSH-ing as root completes the box.
+    </p>
+    <pre>$ puttygen root.ppk -O private-openssh -o root.pem
+$ chmod 600 root.pem
+$ ssh -i root.pem root@10.10.11.227
+root@keeper:~# cat root.txt</pre>
+
+    <h2>// TAKEAWAYS</h2>
+    <p>
+      Always check default credentials on admin portals — this is shockingly common in real environments too. The KeePass CVE is a great reminder that memory safety matters even for local password managers.
+    </p>
+  </div>
+</div>
+
+<footer>
+  <span>© 2025 KEENAN // SNUFFKEY</span>
+  <span>BUILT WITH HTML · CSS · JS</span>
+  <span>ALL SYSTEMS NOMINAL</span>
+</footer>
+
+<script src="../js/matrix.js"></script>
+</body>
+</html>

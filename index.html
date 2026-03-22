@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Snuffkey // Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
+  <style>
+    /* ── Variables & Reset ── */
+    :root {
+      --green: #00ff41; --green-dim: #00c832; --green-dark: #003b00;
+      --bg: #020d02; --surface: rgba(0,255,65,0.04); --border: rgba(0,255,65,0.2);
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background:var(--bg); color:var(--green); font-family:'Share Tech Mono',monospace; min-height:100vh; overflow-x:hidden; cursor:none; }
+
+    /* ── Cursor ── */
+    .cursor { position:fixed; width:20px; height:20px; border:1px solid var(--green); border-radius:50%; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); transition:width .2s,height .2s; mix-blend-mode:difference; }
+    .cursor-dot { position:fixed; width:4px; height:4px; background:var(--green); border-radius:50%; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); }
+
+    /* ── Matrix canvas ── */
+    #matrix-canvas { position:fixed; top:0; left:0; width:100%; height:100%; opacity:.06; z-index:0; pointer-events:none; }
+
+    /* ── Scanlines ── */
+    body::after { content:''; position:fixed; top:0; left:0; width:100%; height:100%; background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.08) 2px,rgba(0,0,0,.08) 4px); pointer-events:none; z-index:100; }
+
+    /* ── Nav ── */
+    nav { position:fixed; top:0; left:0; right:0; z-index:200; display:flex; align-items:center; justify-content:space-between; padding:20px 48px; background:linear-gradient(to bottom,rgba(2,13,2,.95),transparent); border-bottom:1px solid var(--border); backdrop-filter:blur(4px); }
+    .nav-logo { font-family:'VT323',monospace; font-size:1.6rem; letter-spacing:4px; color:var(--green); text-decoration:none; text-shadow:0 0 10px var(--green),0 0 20px rgba(0,255,65,.5); }
+    .nav-logo span { color:rgba(0,255,65,.4); }
+    nav ul { list-style:none; display:flex; gap:36px; }
+    nav ul li a { color:var(--green-dim); text-decoration:none; font-size:.85rem; letter-spacing:3px; text-transform:uppercase; transition:all .2s; position:relative; padding-bottom:4px; }
+    nav ul li a::after { content:''; position:absolute; bottom:0; left:0; width:0; height:1px; background:var(--green); box-shadow:0 0 6px var(--green); transition:width .3s; }
+    nav ul li a:hover, nav ul li a.active { color:var(--green); text-shadow:0 0 8px var(--green); }
+    nav ul li a:hover::after, nav ul li a.active::after { width:100%; }
+
+    /* ── Hero ── */
+    .hero { min-height:100vh; display:grid; grid-template-columns:1fr 1fr; align-items:center; padding:120px 48px 80px; gap:64px; max-width:1200px; margin:0 auto; position:relative; z-index:10; }
+    @media(max-width:800px){ .hero{grid-template-columns:1fr;padding:100px 24px 60px;} nav{padding:16px 24px;} nav ul{gap:16px;} }
+
+    /* ── Avatar ── */
+    .hero-visual { display:flex; flex-direction:column; align-items:center; gap:24px; }
+    .avatar-wrapper { position:relative; width:260px; height:260px; }
+    .avatar-wrapper::before,.avatar-wrapper::after { content:''; position:absolute; border-radius:50%; animation:pulse-ring 2.5s ease-out infinite; }
+    .avatar-wrapper::before { inset:-12px; border:1px solid rgba(0,255,65,.3); animation-delay:0s; }
+    .avatar-wrapper::after  { inset:-24px; border:1px solid rgba(0,255,65,.15); animation-delay:.8s; }
+    .avatar-circle { width:260px; height:260px; border-radius:50%; overflow:hidden; border:2px solid var(--green); box-shadow:0 0 20px rgba(0,255,65,.3),0 0 60px rgba(0,255,65,.1); position:relative; z-index:2; }
+    .avatar-circle img { width:100%; height:100%; object-fit:cover; }
+    .avatar-placeholder { width:100%; height:100%; background:var(--green-dark); display:flex; align-items:center; justify-content:center; font-size:5rem; color:var(--green); font-family:'VT323',monospace; }
+    .status-bar { display:flex; align-items:center; gap:8px; font-size:.75rem; letter-spacing:2px; color:var(--green-dim); border:1px solid var(--border); padding:6px 16px; background:var(--surface); }
+    .status-dot { width:6px; height:6px; background:var(--green); border-radius:50%; box-shadow:0 0 6px var(--green); animation:blink 1.5s step-end infinite; }
+
+    /* ── Hero content ── */
+    .hero-content { display:flex; flex-direction:column; gap:20px; }
+    .hero-tag { font-size:.7rem; letter-spacing:4px; color:rgba(0,255,65,.5); }
+    .hero-tag span { color:var(--green); text-shadow:0 0 8px var(--green); }
+    .hero-name { font-family:'VT323',monospace; font-size:5rem; line-height:1; color:var(--green); text-shadow:0 0 20px rgba(0,255,65,.6),0 0 40px rgba(0,255,65,.2); letter-spacing:6px; }
+    .hero-alias { font-size:.9rem; color:rgba(0,255,65,.5); letter-spacing:3px; }
+    .hero-alias span { color:var(--green); animation:flicker 4s step-end infinite; }
+    .hero-bio { font-size:.9rem; line-height:1.8; color:rgba(0,255,65,.75); max-width:520px; }
+    .hero-bio .hl { color:var(--green); text-shadow:0 0 6px rgba(0,255,65,.4); }
+
+    /* ── Shared components ── */
+    .divider { height:1px; background:linear-gradient(to right,var(--green),transparent); opacity:.4; margin:8px 0; }
+    .terminal-line { display:flex; align-items:center; gap:8px; font-size:.8rem; color:rgba(0,255,65,.5); padding:10px 16px; background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--green); }
+    .terminal-line .prompt { color:var(--green); }
+    .skills { display:flex; flex-wrap:wrap; gap:8px; }
+    .skill-tag { font-size:.7rem; letter-spacing:2px; padding:4px 12px; border:1px solid rgba(0,255,65,.25); color:rgba(0,255,65,.65); background:rgba(0,255,65,.04); transition:all .2s; }
+    .skill-tag:hover { border-color:var(--green); color:var(--green); background:rgba(0,255,65,.08); box-shadow:0 0 10px rgba(0,255,65,.15); cursor:default; }
+    .btn-primary { display:inline-flex; align-items:center; gap:10px; padding:12px 28px; border:1px solid var(--green); color:var(--bg); background:var(--green); font-family:'Share Tech Mono',monospace; font-size:.8rem; letter-spacing:3px; text-transform:uppercase; text-decoration:none; transition:all .2s; cursor:none; box-shadow:0 0 20px rgba(0,255,65,.3); }
+    .btn-primary:hover { background:transparent; color:var(--green); box-shadow:0 0 30px rgba(0,255,65,.4); }
+
+    /* ── Socials ── */
+    .cta-row { display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+    .socials { display:flex; gap:12px; }
+    .social-link { display:flex; align-items:center; justify-content:center; width:38px; height:38px; border:1px solid var(--border); color:var(--green-dim); text-decoration:none; transition:all .2s; background:var(--surface); }
+    .social-link:hover { border-color:var(--green); color:var(--green); box-shadow:0 0 12px rgba(0,255,65,.25); transform:translateY(-2px); }
+
+    /* ── Scroll hint ── */
+    .scroll-hint { position:absolute; bottom:32px; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:6px; font-size:.65rem; letter-spacing:4px; color:rgba(0,255,65,.3); animation:float 2s ease-in-out infinite; }
+    .scroll-hint::after { content:''; width:1px; height:40px; background:linear-gradient(to bottom,var(--green),transparent); }
+
+    /* ── Stats ── */
+    .stats-row { position:relative; z-index:10; display:grid; grid-template-columns:repeat(4,1fr); max-width:1200px; margin:0 auto; padding:0 48px 0; gap:1px; background:var(--border); }
+    @media(max-width:600px){ .stats-row{grid-template-columns:repeat(2,1fr); padding:0 24px 0;} }
+    .stat-item { background:var(--bg); padding:28px 24px; display:flex; flex-direction:column; gap:6px; transition:background .2s; }
+    .stat-item:hover { background:var(--surface); }
+    .stat-num { font-family:'VT323',monospace; font-size:2.8rem; color:var(--green); text-shadow:0 0 12px rgba(0,255,65,.4); line-height:1; }
+    .stat-label { font-size:.7rem; letter-spacing:3px; color:rgba(0,255,65,.45); text-transform:uppercase; }
+
+    /* ── Section header ── */
+    .section-header { display:flex; align-items:center; gap:16px; margin-bottom:32px; }
+    .section-num { font-family:'VT323',monospace; font-size:1rem; color:rgba(0,255,65,.3); letter-spacing:2px; }
+    .section-title { font-family:'VT323',monospace; font-size:2rem; letter-spacing:5px; color:var(--green); text-shadow:0 0 10px rgba(0,255,65,.3); }
+    .section-line { flex:1; height:1px; background:linear-gradient(to right,var(--border),transparent); }
+
+    /* ── Profiles ── */
+    .profiles-section { position:relative; z-index:10; border-top:1px solid var(--border); padding:64px 48px; }
+    .profiles-inner { max-width:1200px; margin:0 auto; }
+    .profiles-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:1px; background:var(--border); }
+    @media(max-width:700px){ .profiles-grid{grid-template-columns:1fr;} .profiles-section{padding:48px 24px;} }
+    .profile-card { background:var(--bg); display:flex; align-items:center; gap:20px; padding:24px 28px; text-decoration:none; color:inherit; transition:background .2s; position:relative; overflow:hidden; }
+    .profile-card::before { content:''; position:absolute; top:0; left:0; width:0; height:2px; background:var(--green); box-shadow:0 0 10px var(--green); transition:width .4s; }
+    .profile-card:hover { background:var(--surface); }
+    .profile-card:hover::before { width:100%; }
+    .profile-icon { width:52px; height:52px; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all .2s; color:var(--green-dim); }
+    .profile-card:hover .profile-icon { border-color:var(--green); color:var(--green); box-shadow:0 0 14px rgba(0,255,65,.2); }
+    .profile-info { flex:1; display:flex; flex-direction:column; gap:4px; }
+    .profile-name { font-family:'VT323',monospace; font-size:1.3rem; letter-spacing:3px; color:var(--green); }
+    .profile-handle { font-size:.72rem; letter-spacing:2px; color:rgba(0,255,65,.5); }
+    .profile-desc { font-size:.72rem; letter-spacing:1px; color:rgba(0,255,65,.35); }
+    .profile-arrow { font-size:1.2rem; color:rgba(0,255,65,.25); transition:all .2s; flex-shrink:0; }
+    .profile-card:hover .profile-arrow { color:var(--green); transform:translateX(4px); }
+
+    /* ── Footer ── */
+    footer { position:relative; z-index:10; border-top:1px solid var(--border); padding:32px 48px; max-width:1200px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; font-size:.72rem; color:rgba(0,255,65,.3); letter-spacing:2px; }
+    @media(max-width:600px){ footer{flex-direction:column;gap:8px;text-align:center;padding:24px;} }
+
+    /* ── Glitch ── */
+    .glitch { position:relative; }
+    .glitch:hover::before,.glitch:hover::after { content:attr(data-text); position:absolute; top:0; left:0; width:100%; height:100%; }
+    .glitch:hover::before { color:#ff003c; clip-path:polygon(0 0,100% 0,100% 35%,0 35%); transform:translateX(-2px); animation:glitch1 .3s linear infinite; }
+    .glitch:hover::after  { color:#00d4ff; clip-path:polygon(0 65%,100% 65%,100% 100%,0 100%); transform:translateX(2px); animation:glitch2 .3s linear infinite; }
+
+    /* ── Animations ── */
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+    @keyframes pulse-ring { 0%{transform:scale(.95);opacity:1} 100%{transform:scale(1.05);opacity:0} }
+    @keyframes flicker { 0%,95%,100%{opacity:1} 96%,98%{opacity:.2} 97%,99%{opacity:1} }
+    @keyframes float { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(-6px)} }
+    @keyframes glitch1 { 0%,100%{transform:translateX(-2px)} 50%{transform:translateX(2px)} }
+    @keyframes glitch2 { 0%,100%{transform:translateX(2px)} 50%{transform:translateX(-2px)} }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo"><span>//</span> SNUFFKEY</a>
+  <ul>
+    <li><a href="index.html" class="active">Home</a></li>
+    <li><a href="projects/index.html">Projects</a></li>
+    <li><a href="blogs/index.html">Blogs</a></li>
+    <li><a href="writeups/index.html">Writeups</a></li>
+    <li><a href="resume.html">Resume</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-visual">
+    <div class="avatar-wrapper">
+      <div class="avatar-circle">
+        <img src="assets/ProfilePicture.jpg" alt="Keenan">
+        <div class="avatar-placeholder">K</div>
+      </div>
+    </div>
+    <div class="status-bar">
+      <div class="status-dot"></div>
+      SYSTEM ONLINE // AVAILABLE FOR HIRE
+    </div>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-tag">root@snuffkey:~$ <span>whoami</span></div>
+    <div class="hero-name glitch" data-text="KEENAN">KEENAN</div>
+    <div class="hero-alias">alias: <span>[ SNUFFKEY ]</span></div>
+    <div class="divider"></div>
+    <div class="terminal-line"><span class="prompt">$</span> cat about.txt</div>
+    <p class="hero-bio">
+      <span class="hl">Ethical hacker</span> & aspiring pentester. Obsessed with hacking and programming since age <span class="hl">15</span>. My love for computers started in first grade — a passion ever since. I enjoy <span class="hl">CTFs</span>, programming, video games, and anime. This site is my digital notebook: write-ups, blogs, and project updates.
+    </p>
+    <div class="skills">
+      <span class="skill-tag">PENETRATION TESTING</span>
+      <span class="skill-tag">CTF</span>
+      <span class="skill-tag">PYTHON</span>
+      <span class="skill-tag">LINUX</span>
+      <span class="skill-tag">OSINT</span>
+      <span class="skill-tag">NETWORKING</span>
+    </div>
+    <div class="cta-row">
+      <a href="writeups/index.html" class="btn-primary">VIEW WRITEUPS →</a>
+      <div class="socials">
+        <a href="https://github.com/YOUR_USERNAME" class="social-link" title="GitHub" target="_blank">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+        </a>
+        <a href="https://linkedin.com/in/keenanmo" class="social-link" title="LinkedIn" target="_blank">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        </a>
+        <a href="https://x.com/YOUR_USERNAME" class="social-link" title="X / Twitter" target="_blank">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.631L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
+        </a>
+        <a href="mailto:your@email.com" class="social-link" title="Email">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint">SCROLL</div>
+</section>
+
+<!-- STATS -->
+<div class="stats-row">
+  <div class="stat-item"><div class="stat-num">327+</div><div class="stat-label">CTFs Completed</div></div>
+  <div class="stat-item"><div class="stat-num">12+</div><div class="stat-label">Writeups Published</div></div>
+  <div class="stat-item"><div class="stat-num">3+</div><div class="stat-label">Projects Built</div></div>
+  <div class="stat-item"><div class="stat-num">3yr</div><div class="stat-label">Years Hacking</div></div>
+</div>
+
+<!-- PROFILES -->
+<div class="profiles-section">
+  <div class="profiles-inner">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2 class="section-title">// FIND ME ON</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="profiles-grid">
+
+      <a href="https://app.hackthebox.com/profile/YOUR_HTB_ID" class="profile-card" target="_blank">
+        <div class="profile-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M11.996 0L3 4.969v9.938l2.009 1.161V6.131L11.996 2.32l6.987 3.811V16.07L11.996 19.88l-4.978-2.715v2.319l4.978 2.516 8.996-4.969V4.97L11.996 0zm-.01 5.45l-4.514 2.474v4.924l1.989 1.098V8.917l2.525-1.384 2.525 1.384v4.906l2.008-1.074V7.924L11.986 5.45z"/></svg>
+        </div>
+        <div class="profile-info">
+          <div class="profile-name">HACKTHEBOX</div>
+          <div class="profile-handle">@keenantech</div>
+          <div class="profile-desc">Pro Hacker · Active competitor</div>
+        </div>
+        <div class="profile-arrow">→</div>
+      </a>
+
+      <a href="https://tryhackme.com/p/YOUR_THM_USERNAME" class="profile-card" target="_blank">
+        <div class="profile-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M10.705 0C7.54 0 4.902 2.285 4.374 5.298a4.502 4.502 0 0 0-1.87 8.574C2.915 17.393 6.458 20.7 10.705 20.7c4.247 0 7.79-3.307 8.2-7.828a4.502 4.502 0 0 0-1.869-8.574C16.507 2.285 13.87 0 10.705 0zm0 1.8a6.9 6.9 0 0 1 6.591 4.882 4.502 4.502 0 0 0 0 8.236A6.9 6.9 0 0 1 10.705 18.9a6.9 6.9 0 0 1-6.59-3.982 4.502 4.502 0 0 0 0-8.236A6.9 6.9 0 0 1 10.705 1.8zm0 3.3a3.6 3.6 0 1 0 0 7.2 3.6 3.6 0 0 0 0-7.2zm8.795 1.8a2.7 2.7 0 1 1 0 5.4 2.7 2.7 0 0 1 0-5.4zM2 6.9a2.7 2.7 0 1 1 0 5.4A2.7 2.7 0 0 1 2 6.9zm8.705.6a2.7 2.7 0 1 1 0 5.4 2.7 2.7 0 0 1 0-5.4z"/></svg>
+        </div>
+        <div class="profile-info">
+          <div class="profile-name">TRYHACKME</div>
+          <div class="profile-handle">@keenantech</div>
+          <div class="profile-desc">Top 1% · 331 Rooms completed</div>
+        </div>
+        <div class="profile-arrow">→</div>
+      </a>
+
+      <a href="https://infosec.exchange/@YOUR_USERNAME" class="profile-card" target="_blank" rel="me">
+        <div class="profile-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M23.268 5.313c-.35-2.578-2.617-4.61-5.304-5.004C17.51.242 15.792 0 11.813 0h-.03c-3.98 0-4.835.242-5.288.309C3.882.692 1.496 2.518.917 5.127.64 6.412.61 7.837.661 9.143c.074 1.874.088 3.745.26 5.611.118 1.24.325 2.47.62 3.68.55 2.237 2.777 4.098 4.96 4.857 2.336.792 4.849.923 7.256.38.265-.061.527-.132.786-.213.585-.184 1.27-.39 1.774-.753a.057.057 0 0 0 .023-.043v-1.809a.052.052 0 0 0-.02-.041.053.053 0 0 0-.046-.01 20.282 20.282 0 0 1-4.709.545c-2.73 0-3.463-1.284-3.674-1.818a5.593 5.593 0 0 1-.319-1.433.053.053 0 0 1 .066-.054c1.517.363 3.072.546 4.632.546.376 0 .75 0 1.125-.01 1.57-.044 3.224-.124 4.768-.422.038-.008.077-.015.11-.024 2.435-.464 4.753-1.92 4.989-5.604.008-.145.03-1.52.03-1.67.002-.512.167-3.63-.024-5.545zm-3.748 9.195h-2.561V8.29c0-1.309-.55-1.976-1.67-1.976-1.23 0-1.846.79-1.846 2.35v3.403h-2.546V8.663c0-1.56-.617-2.35-1.848-2.35-1.112 0-1.668.668-1.67 1.977v6.218H4.822V8.102c0-1.31.337-2.35 1.011-3.12.696-.77 1.608-1.164 2.74-1.164 1.311 0 2.302.5 2.962 1.498l.638 1.06.638-1.06c.66-.999 1.65-1.498 2.96-1.498 1.13 0 2.043.395 2.74 1.164.675.77 1.012 1.81 1.012 3.12z"/></svg>
+        </div>
+        <div class="profile-info">
+          <div class="profile-name">MASTODON</div>
+          <div class="profile-handle">@keenantech@infosec.exchange</div>
+          <div class="profile-desc">InfoSec community · Updates & thoughts</div>
+        </div>
+        <div class="profile-arrow">→</div>
+      </a>
+
+      <a href="https://github.com/YOUR_USERNAME" class="profile-card" target="_blank">
+        <div class="profile-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+        </div>
+        <div class="profile-info">
+          <div class="profile-name">GITHUB</div>
+          <div class="profile-handle">@keenantech</div>
+          <div class="profile-desc">Projects · Scripts · Tools</div>
+        </div>
+        <div class="profile-arrow">→</div>
+      </a>
+
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span>© 2025 KEENAN // SNUFFKEY</span>
+  <span>BUILT WITH HTML · CSS · JS</span>
+  <span>ALL SYSTEMS NOMINAL</span>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Cursor
+  const cursor = document.createElement('div'); cursor.className = 'cursor';
+  const dot    = document.createElement('div'); dot.className    = 'cursor-dot';
+  document.body.appendChild(cursor); document.body.appendChild(dot);
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = dot.style.left = e.clientX + 'px';
+    cursor.style.top  = dot.style.top  = e.clientY + 'px';
+  });
+  document.querySelectorAll('a, button, .skill-tag').forEach(el => {
+    el.addEventListener('mouseenter', () => { cursor.style.width = cursor.style.height = '36px'; });
+    el.addEventListener('mouseleave', () => { cursor.style.width = cursor.style.height = '20px'; });
+  });
+
+  // Matrix rain
+  const canvas = document.createElement('canvas');
+  canvas.id = 'matrix-canvas';
+  document.body.prepend(canvas);
+  const ctx = canvas.getContext('2d');
+  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  resize(); window.addEventListener('resize', resize);
+  const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノ0123456789ABCDEF></?!@#';
+  const fs = 14; let drops = [];
+  function initDrops() { drops = Array(Math.floor(canvas.width/fs)).fill(1); }
+  initDrops(); window.addEventListener('resize', initDrops);
+  setInterval(() => {
+    ctx.fillStyle = 'rgba(2,13,2,0.05)'; ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle = '#00ff41'; ctx.font = fs + 'px Share Tech Mono,monospace';
+    drops.forEach((d,i) => {
+      ctx.fillText(chars[Math.floor(Math.random()*chars.length)], i*fs, d*fs);
+      if (d*fs > canvas.height && Math.random() > 0.975) drops[i] = 0;
+      drops[i]++;
+    });
+  }, 50);
+
+  // Entrance animation
+  const hero = document.querySelector('.hero-content');
+  if (hero) { hero.style.cssText += 'opacity:0;transform:translateY(16px);transition:opacity .7s ease .2s,transform .7s ease .2s'; requestAnimationFrame(() => { hero.style.opacity='1'; hero.style.transform='translateY(0)'; }); }
+});
+</script>
+</body>
+</html>
