@@ -47,13 +47,6 @@ portfolio/
 1. Create a new `.html` file in `writeups/` — copy `htb-keeper.html` as a template
 2. Add a new `<a class="card">` entry in `writeups/index.html`
 
-## 🚀 Deploy to GitHub Pages
-
-1. Create a repo named `YOUR_USERNAME.github.io`
-2. Push all files to the `main` branch
-3. Go to **Settings → Pages → Source → main branch → / (root)**
-4. Your site will be live at `https://YOUR_USERNAME.github.io`
-
 ## ✏️ Personalisation Checklist
 
 - [ ] Update stats (CTFs, writeups, projects, years) in `index.html`
