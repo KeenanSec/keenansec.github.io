@@ -56,9 +56,6 @@ portfolio/
 
 ## ✏️ Personalisation Checklist
 
-- [ ] Replace `YOUR_USERNAME` in social links in `index.html`
-- [ ] Replace `your@email.com` in `index.html`
-- [ ] Add your profile photo to `assets/avatar.jpg` and uncomment the `<img>` tag
 - [ ] Update stats (CTFs, writeups, projects, years) in `index.html`
 - [ ] Update skills, certifications, and experience in `resume.html`
 - [ ] Add/remove blog posts, projects, and writeups as needed
