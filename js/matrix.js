@@ -1,5 +1,5 @@
 // ============================================
-//  SNUFFKEY PORTFOLIO — SHARED MATRIX JS
+//  KEENANSEC PORTFOLIO — SHARED MATRIX JS
 // ============================================
 
 document.addEventListener('DOMContentLoaded', () => {

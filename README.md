@@ -1,6 +1,6 @@
-# snuffkey.github.io
+# keenansec.github.io
 
-Personal portfolio website for **Keenan (Snuffkey)** — ethical hacker, aspiring pentester, CTF competitor.
+Personal portfolio website for **Keenan (KeenanSec)** — ethical hacker, aspiring pentester, CTF competitor.
 
 ## 🖥️ Live Site
 
