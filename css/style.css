@@ -22,29 +22,6 @@ body {
   font-family: 'Share Tech Mono', monospace;
   min-height: 100vh;
   overflow-x: hidden;
-  cursor: none;
-}
-
-/* ── Cursor ── */
-.cursor {
-  position: fixed;
-  width: 20px; height: 20px;
-  border: 1px solid var(--green);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%,-50%);
-  transition: width 0.2s, height 0.2s;
-  mix-blend-mode: difference;
-}
-.cursor-dot {
-  position: fixed;
-  width: 4px; height: 4px;
-  background: var(--green);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%,-50%);
 }
 
 /* ── Matrix canvas ── */
@@ -263,7 +240,6 @@ nav ul li a.active::after { width: 100%; }
   text-transform: uppercase;
   text-decoration: none;
   transition: all 0.2s;
-  cursor: none;
   box-shadow: 0 0 20px rgba(0,255,65,0.3);
 }
 .btn-primary:hover {
@@ -285,7 +261,6 @@ nav ul li a.active::after { width: 100%; }
   text-transform: uppercase;
   text-decoration: none;
   transition: all 0.2s;
-  cursor: none;
 }
 .btn-ghost:hover {
   border-color: var(--green);
@@ -309,7 +284,6 @@ nav ul li a.active::after { width: 100%; }
   color: var(--green);
   background: rgba(0,255,65,0.08);
   box-shadow: 0 0 10px rgba(0,255,65,0.15);
-  cursor: default;
 }
 
 /* ── Divider ── */
