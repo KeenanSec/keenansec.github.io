@@ -277,7 +277,7 @@
 <script>
 // document.addEventListener('DOMContentLoaded', () => {
 //   // Cursor
-//   const cursor = document.createElement('div'); cursor.className = 'cursor';
+  const cursor = document.createElement('div'); cursor.className = 'cursor';
 //   const dot    = document.createElement('div'); dot.className    = 'cursor-dot';
 //   document.body.appendChild(cursor); document.body.appendChild(dot);
 //   document.addEventListener('mousemove', e => {
@@ -289,26 +289,7 @@
 //     el.addEventListener('mouseleave', () => { cursor.style.width = cursor.style.height = '20px'; });
 //   });
 
-  // Matrix rain
-  // const canvas = document.createElement('canvas');
-  // canvas.id = 'matrix-canvas';
-  // document.body.prepend(canvas);
-  // const ctx = canvas.getContext('2d');
-  // function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-  // resize(); window.addEventListener('resize', resize);
-  // const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノ0123456789ABCDEF></?!@#';
-  // const fs = 14; let drops = [];
-  // function initDrops() { drops = Array(Math.floor(canvas.width/fs)).fill(1); }
-  // initDrops(); window.addEventListener('resize', initDrops);
-  // setInterval(() => {
-  //   ctx.fillStyle = 'rgba(2,13,2,0.05)'; ctx.fillRect(0,0,canvas.width,canvas.height);
-  //   ctx.fillStyle = '#00ff41'; ctx.font = fs + 'px Share Tech Mono,monospace';
-  //   drops.forEach((d,i) => {
-  //     ctx.fillText(chars[Math.floor(Math.random()*chars.length)], i*fs, d*fs);
-  //     if (d*fs > canvas.height && Math.random() > 0.975) drops[i] = 0;
-  //     drops[i]++;
-  //   });
-  // }, 50);
+
 
   // Entrance animation
   const hero = document.querySelector('.hero-content');
