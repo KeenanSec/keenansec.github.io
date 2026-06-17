@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projects // Keenan Morrison</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="dots" aria-hidden="true"><span></span><span></span><span></span></div>
+    <span class="path mono path-mobile">keenan@sec:<b>~/projects</b></span>
+    <nav class="nav mono" aria-label="Primary">
+      <a href="index.html">home</a>
+      <a href="about.html">about</a>
+      <a href="projects.html" class="active">projects</a>
+      <a href="index.html#certs">certs</a>
+      <a href="index.html#contact">contact</a>
+    </nav>
+  </div>
+</div>
+
+<main class="wrap">
+
+  <header class="page-head">
+    <div class="eyebrow mono">// projects</div>
+    <h1 class="page-title">Projects</h1>
+    <p class="page-sub">Hands-on builds across security operations, identity, and infrastructure. Each one is documented and on GitHub.</p>
+  </header>
+
+  <section style="border-bottom:none;padding-top:32px">
+
+    <a class="proj" href="https://github.com/KeenanSec/Enterprise-Security-Operations-Identity-Lab" target="_blank" rel="noopener">
+      <div class="proj-head">
+        <span class="proj-title">Enterprise Security Operations &amp; Identity Lab</span>
+        <span class="proj-id mono">01</span>
+      </div>
+      <p>A segmented Proxmox network with pfSense VLAN isolation, an HTTPS reverse proxy, and network-wide DNS filtering. Active Directory federated to Keycloak over LDAP/OIDC for centralized auth, RBAC, and MFA. Wazuh and Sysmon handle detection; critical alerts auto-generate tickets.</p>
+      <div class="tags">
+        <span class="tag">Proxmox</span>
+        <span class="tag">pfSense</span>
+        <span class="tag">Wazuh</span>
+        <span class="tag">Keycloak</span>
+        <span class="tag">Active Directory</span>
+      </div>
+    </a>
+
+    <a class="proj" href="https://github.com/KeenanSec/Enterprise-ServiceNow-ITSM-Implementation-" target="_blank" rel="noopener">
+      <div class="proj-head">
+        <span class="proj-title">Enterprise ServiceNow ITSM Implementation</span>
+        <span class="proj-id mono">02</span>
+      </div>
+      <p>A 50-user ServiceNow build following ITIL principles: CMDB dependency mapping, RBAC, and a CAB-driven change workflow. Custom Service Portal with Virtual Agent triage, a Slack webhook for P1 escalation, and SLA breach alerting wired into an executive dashboard.</p>
+      <div class="tags">
+        <span class="tag">ServiceNow</span>
+        <span class="tag">ITIL</span>
+        <span class="tag">CMDB</span>
+        <span class="tag">Automation</span>
+      </div>
+    </a>
+
+    <a class="proj" href="https://github.com/KeenanSec/Homelabs/blob/main/MDM/mosyle-mdm-lab-1.pdf" target="_blank" rel="noopener">
+      <div class="proj-head">
+        <span class="proj-title">Apple Fleet Management Lab</span>
+        <span class="proj-id mono">03</span>
+      </div>
+      <p>A standalone Mosyle console managing a macOS fleet with signed configuration profiles: serial-based asset tracking across sites, disabled MAC randomization for network visibility, and enforced browsing restrictions.</p>
+      <div class="tags">
+        <span class="tag">Mosyle</span>
+        <span class="tag">macOS</span>
+        <span class="tag">MDM</span>
+      </div>
+    </a>
+
+    <!--
+    TO ADD A PROJECT: copy one <a class="proj">...</a> block above,
+    paste it here, and update the title, number, text, link, and tags.
+    -->
+
+  </section>
+
+</main>
+
+<footer>
+  <span class="mono">keenan@sec:~$ exit // built &amp; hosted by Keenan Morrison</span>
+</footer>
+
+</body>
+</html>
